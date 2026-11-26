@@ -1,0 +1,40 @@
+@gorth/discovery
+discovery-engine
+├── search
+│   ├── query
+│   ├── filtering
+│   ├── facets
+│   ├── ranking
+│   ├── indexing
+│   └── semantic-search
+│
+├── suggest
+│   ├── autocomplete
+│   ├── query-suggestion
+│   ├── typo-correction
+│   ├── trending-query
+│   └── recent-search
+│
+├── recommendation
+│   ├── personalized
+│   ├── related
+│   ├── similar
+│   ├── trending
+│   ├── collaborative
+    ├── frequently-bought
+│   └── ranking
+│
+├── personalization
+│   ├── user-interest
+│   ├── preference
+│   ├── behavior
+│   ├── context
+│   └── affinity
+│
+└── discovery-event
+    ├── impression
+    ├── click
+    ├── search
+    ├── view
+    ├── conversion
+    └── feedback

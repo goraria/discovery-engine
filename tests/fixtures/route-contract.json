@@ -1,0 +1,23 @@
+[
+  "DELETE /discovery/document/:type/:id",
+  "GET /discovery/recommendation",
+  "GET /discovery/recommendation/me",
+  "GET /discovery/search",
+  "GET /discovery/suggestion",
+  "GET /discovery/trending",
+  "GET /health",
+  "HEAD /discovery/recommendation",
+  "HEAD /discovery/recommendation/me",
+  "HEAD /discovery/search",
+  "HEAD /discovery/suggestion",
+  "HEAD /discovery/trending",
+  "HEAD /health",
+  "POST /discovery/chat/search",
+  "POST /discovery/event",
+  "POST /discovery/reader/search",
+  "POST /discovery/social/search",
+  "POST /discovery/sync",
+  "POST /discovery/video/search",
+  "PUT /discovery/document/:type/:id",
+  "PUT /discovery/suggestion/:type"
+]
