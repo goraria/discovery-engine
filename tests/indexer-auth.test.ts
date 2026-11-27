@@ -68,7 +68,7 @@ async function response(credential?: string) {
   return new Hono()
     .post("/sync", requireIndexer(), (c) =>
       Response.json(
-        { application: c.get("application")! },
+        { application: c.get("app")! },
         { headers: { "content-type": "application/json; charset=UTF-8" } },
       ),
     )

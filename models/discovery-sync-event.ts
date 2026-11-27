@@ -1,7 +1,7 @@
 import { pool } from "@/database";
 import { rawUpsertDocument } from "@/models/search-document";
 import type { SyncEventInput } from "@/schemas/sync";
-import type { Application } from "@/types/auth";
+import type { Application } from "@/utils/constant";
 
 export async function rawIngestDocuments(
   events: SyncEventInput[],

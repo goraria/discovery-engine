@@ -1,5 +1,5 @@
 import { pool } from "@/database"
-import type { Application } from "@/types/auth"
+import type { Application } from "@/utils/constant"
 import type { PoolClient } from "pg"
 
 export interface DocumentInput {

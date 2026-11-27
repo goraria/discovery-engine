@@ -1,5 +1,5 @@
 import { pool } from "@/database";
-import type { Application } from "@/types/auth";
+import type { Application } from "@/utils/constant";
 
 /** Explainable recency/keyword ranking from this user's verified events, not AI. */
 export async function rawPersonalizedRecommendations(

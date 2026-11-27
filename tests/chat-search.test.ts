@@ -1,5 +1,5 @@
 import { Context } from "hono"
-import type { ApiEnv, AppContext } from "@/types/auth"
+import type { Binding, Session } from "@/utils/interface"
 import { beforeEach, expect, it, vi } from "vitest";
 const state = vi.hoisted(() => ({ query: vi.fn() }));
 vi.mock("@/database", () => ({ pool: { query: state.query } }));
@@ -52,8 +52,8 @@ it("validates membership cutoff, query and result bounds", () => {
     expect(() => parseChatSearch({ ...input, ...patch })).toThrow();
 });
 
-function searchContext(application: AppContext["application"], request: Request) {
-  const context = new Context<ApiEnv>(request)
-  context.set("application", application)
+function searchContext(application: Session["app"], request: Request) {
+  const context = new Context<Binding>(request)
+  context.set("app", application)
   return context
 }

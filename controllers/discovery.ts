@@ -1,4 +1,4 @@
-import type { ApiContext } from "@/types/auth";
+import type { Event } from "@/utils/interface";
 import { getQueryValues, readRequestBody } from "@/utils/request";
 import {
   rawRecommend,
@@ -9,10 +9,10 @@ import {
   rawUpsertSuggestion,
   type DocumentInput,
 } from "@/models/search-document";
-import { applications, type Application } from "@/types/auth";
+import { applicationNamespaces, type Application } from "@/utils/constant";
 import { parseSyncEvents } from "@/schemas/sync";
 import { rawIngestDocuments as ingestDocumentsServices } from "@/models/discovery-sync-event";
-type DiscoveryContext = ApiContext;
+type DiscoveryContext = Event;
 function error(context: DiscoveryContext, message: string) {
   return context.json(
     { error: message },
@@ -24,7 +24,7 @@ function error(context: DiscoveryContext, message: string) {
 }
 function readPage(context: DiscoveryContext) {
   const application = getQueryValues(context.req.raw)["application"];
-  if (!applications.includes(application as Application)) return null;
+  if (!applicationNamespaces.includes(application as Application)) return null;
   const requestedLimit = Number(getQueryValues(context.req.raw)["limit"] ?? 20);
   const requestedOffset = Number(getQueryValues(context.req.raw)["offset"] ?? 0);
   if (
@@ -168,7 +168,7 @@ export async function actPutDocumentController(context: DiscoveryContext) {
     },
   ]);
   return context.json(
-    await ingestDocumentsServices(events, context.get("application")!),
+    await ingestDocumentsServices(events, context.get("app")!),
     {
       status: 202,
       headers: { "content-type": "application/json; charset=UTF-8" },
@@ -190,7 +190,7 @@ export async function actDeleteDocumentController(context: DiscoveryContext) {
     },
   ]);
   return context.json(
-    await ingestDocumentsServices(events, context.get("application")!),
+    await ingestDocumentsServices(events, context.get("app")!),
     {
       status: 202,
       headers: { "content-type": "application/json; charset=UTF-8" },
@@ -214,7 +214,7 @@ export async function actPutSuggestionController(context: DiscoveryContext) {
     return error(context, "invalid_suggestion");
   }
   const result = await rawUpsertSuggestion(
-    context.get("application")!,
+    context.get("app")!,
     type,
     body.phrase.trim(),
     body.weight,
@@ -264,8 +264,8 @@ export async function actPostEventController(context: DiscoveryContext) {
   )
     return error(context, "invalid_value");
   const result = await rawRecordEvent(
-    context.get("application")!,
-    context.get("subject")!,
+    context.get("app")!,
+    context.get("sub")!,
     body as Parameters<typeof rawRecordEvent>[2],
   );
   return context.json(result, {

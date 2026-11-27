@@ -10,7 +10,7 @@ import {
   isInsufficientScopeError,
   requestToResourceInput,
 } from "better-auth/oauth2";
-import { applications } from "@/types/auth";
+import { applicationNamespaces } from "@/utils/constant";
 import { nodeEnv, authUrl } from "@/utils/environment";
 import type { ServiceAccess } from "@/utils/interface";
 export async function serviceTokenConfiguration() {
@@ -47,7 +47,7 @@ export async function serviceTokenConfiguration() {
   }
 }
 function requiredScope(
-  application: (typeof applications)[number],
+  application: (typeof applicationNamespaces)[number],
   access: ServiceAccess,
 ) {
   return `${application}:${access}`;
@@ -70,7 +70,7 @@ export async function verifyServiceRequest(
   // Canonicalize only the case-insensitive wire scheme; never alter the credential.
   input.authorizationHeader = "Bearer " + input.authorizationHeader.slice(7);
   const config = await serviceTokenConfiguration();
-  const permitted = applications.map((application) =>
+  const permitted = applicationNamespaces.map((application) =>
     requiredScope(application, access),
   );
   const verify = createBearerVerifier({
@@ -119,7 +119,7 @@ export async function verifyServiceRequest(
       message: "unauthorized_oauth_client",
     });
   const registeredApp = await getServiceClientApplication("discovery", config.audience, clientId);
-  const application = applications.find((app) => app === registeredApp);
+  const application = applicationNamespaces.find((app) => app === registeredApp);
   if (!application)
     throw new HTTPError({
       status: 403,

@@ -1,6 +1,6 @@
-import type { ApiEnv } from "@/types/auth";
+import type { Binding, Event } from "@/utils/interface";
 import type { MiddlewareHandler } from "hono";
-import type { ApiContext } from "@/types/auth";
+
 import { HTTPError } from "nitro/h3";
 import { requireServiceMachineBinding } from "@/utils/sso-directory";
 import {
@@ -11,11 +11,11 @@ import {
   serviceAuthFailure,
   serviceTokenConfiguration,
 } from "@/lib/auth/verification";
-import { applications } from "@/types/auth";
+import { applicationNamespaces } from "@/utils/constant";
 
 /** SSO's administrative machine-scope ceiling authorizes publishers. */
-export function requireIndexer(): MiddlewareHandler<ApiEnv> {
-  return async (context: ApiContext, next) => {
+export function requireIndexer(): MiddlewareHandler<Binding> {
+  return async (context: Event, next) => {
     try {
       const config = await serviceTokenConfiguration();
       if (
@@ -32,7 +32,7 @@ export function requireIndexer(): MiddlewareHandler<ApiEnv> {
         throw new HTTPError({ status: 401 });
       input.authorizationHeader =
         "Bearer " + input.authorizationHeader.slice(7);
-      const scopes = applications.map(
+      const scopes = applicationNamespaces.map(
         (application) => `${application}:discovery:write`,
       );
       const claims = await verifyAccessTokenRequest(input, {
@@ -51,7 +51,7 @@ export function requireIndexer(): MiddlewareHandler<ApiEnv> {
       });
       const granted =
         typeof claims.scope === "string" ? claims.scope.split(" ") : [];
-      const permitted = applications.filter((application) =>
+      const permitted = applicationNamespaces.filter((application) =>
         granted.includes(`${application}:discovery:write`),
       );
       if (
@@ -68,8 +68,8 @@ export function requireIndexer(): MiddlewareHandler<ApiEnv> {
       )
         throw new HTTPError({ status: 403 });
       await requireServiceMachineBinding("discovery", config.audience, claims.client_id);
-      context.set("application", permitted[0]);
-      context.set("subject", claims.client_id);
+      context.set("app", permitted[0]);
+      context.set("sub", claims.client_id);
     } catch (error) {
       return serviceAuthFailure(error);
     }
