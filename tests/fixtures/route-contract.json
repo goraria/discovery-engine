@@ -1,4 +1,6 @@
 [
+  "GET /",
+  "GET /.well-known/oauth-protected-resource",
   "DELETE /discovery/document/:type/:id",
   "GET /discovery/recommendation",
   "GET /discovery/recommendation/me",

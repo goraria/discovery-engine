@@ -1,4 +1,4 @@
-import { readRequestBody } from "@/utils/request";
+import { readRequestBody } from "@/modules/principle/request";
 import type { Event } from "@/utils/interface";
 import { parseSyncEvents } from "@/schemas/sync";
 import { rawIngestDocuments as ingestDocumentsServices } from "@/models/discovery-sync-event";

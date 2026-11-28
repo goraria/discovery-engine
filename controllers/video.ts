@@ -1,4 +1,4 @@
-import { readRequestBody } from "@/utils/request";
+import { readRequestBody } from "@/modules/principle/request";
 import { HTTPError } from "nitro/h3";
 import type { Event } from "@/utils/interface";
 import { parseVideoSearch } from "@/schemas/video";

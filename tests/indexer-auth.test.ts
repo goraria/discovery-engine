@@ -5,7 +5,7 @@ import {
   exportJWK,
   SignJWT,
 } from "@gorth-com/principle/cores/jose";
-vi.mock("@/utils/sso-directory", () => ({
+vi.mock("@/modules/structure/sso-directory", () => ({
   requireServiceMachineBinding: async (_service: string, _audience: string, clientId: string) => {
     if (clientId !== "video-index-server") throw new Error("unlinked machine fixture");
   },

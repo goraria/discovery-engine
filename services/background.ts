@@ -1,8 +1,14 @@
-import { QueueClient } from "@vercel/queue"
-const queue = new QueueClient({ telemetry: { isEnabled: false } })
-export async function enqueueBackgroundJob(kind: "drain" | "maintenance" = "drain") {
-  await queue.send("discovery-jobs", { kind })
-}
+import { createBackgroundQueue } from "@/modules/principle/queue";
+
+export const {
+  enqueueBackgroundJob,
+  processBackgroundJob,
+  plugin: backgroundQueuePlugin,
+} = createBackgroundQueue("discovery-jobs", {
+  drain: drainBackgroundJobs,
+  maintenance: runMaintenance,
+});
+
 async function drainBackgroundJobs() {
   const { rawSyncNextDocument: syncNextDocument } = await import("@/models/discovery-sync-event")
   for (let batch = 0; batch < 10; batch++) {
@@ -13,13 +19,8 @@ async function drainBackgroundJobs() {
   }
   await enqueueBackgroundJob()
 }
-export async function processBackgroundJob(message: unknown) {
-  const kind = message && typeof message === "object" ? (message as { kind?: unknown }).kind : undefined
-  if (kind === "maintenance") {
-    const { rawAggregateTrending: aggregateTrending } = await import("@/models/discovery-sync-event")
-    await aggregateTrending()
-    return
-  }
-  if (kind !== "drain") throw new Error("Invalid background job")
-  await drainBackgroundJobs()
+
+async function runMaintenance() {
+  const { rawAggregateTrending: aggregateTrending } = await import("@/models/discovery-sync-event")
+  await aggregateTrending()
 }
